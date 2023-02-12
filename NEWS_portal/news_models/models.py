@@ -1,28 +1,26 @@
 from django.db import models
-from django.db.models import Sum
 from django.contrib.auth.models import User
+from django.urls import reverse
+
 from .resources import CATEGORY, TYPE_OF_POST, news
 
-
-# from datetime import datetime
 
 class Author(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     author_rating = models.FloatField(default=0)
 
     def update_rating(self):
-        post_rating = Post.objects.filter(author_id=self.user_id).aggregate(Sum('rating'))['rating__sum']
-        author_rating = Comment.objects.filter(user=self.user).aggregate(Sum('comment_rating'))['comment_rating__sum']
-        comment_rating = Comment.objects.filter(post__in=Post.objects.filter(author_id=self.user_id)).aggregate(Sum('comment_rating'))['comment_rating__sum']
-        self.author_rating = post_rating * 3 + author_rating + comment_rating
+        self.rating = 0
+        for post in Post.objects.filter(author_id=self.id):
+            self.rating += post.rating * 3
+            for comment in Comment.objects.filter(post_id=post.id):
+                self.rating += comment.rating
+        for comment in Comment.objects.filter(user_id=self.user):
+            self.rating += comment.rating
         self.save()
 
     def __str__(self):
         return f'{self.user}'
-
-
-a1 = Author.objects.get(pk=1)
-a1.update_rating()
 
 
 class Category(models.Model):
@@ -51,6 +49,9 @@ class Post(models.Model):
 
     def __str__(self):
         return f'{self.title}: {self.text[:124] + "..."}'
+
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
 
 
 class PostCategory(models.Model):
