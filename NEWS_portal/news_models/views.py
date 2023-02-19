@@ -1,3 +1,4 @@
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.urls import reverse_lazy
 from django.views.generic import *
 
@@ -32,7 +33,8 @@ class PostDetail(DetailView):
     context_object_name = 'post'  # Название объекта, в котором будет выбранный пользователем продукт
 
 
-class NewsCreate(CreateView):
+class NewsCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news_models.add_post',)
     form_class = NewsForm
     model = Post
     template_name = 'news_edit.html'
@@ -43,19 +45,22 @@ class NewsCreate(CreateView):
         return super().form_valid(form)
 
 
-class NewsUpdate(UpdateView):
+class NewsUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news_models.change_post',)
     form_class = NewsForm
     model = Post
     template_name = 'news_edit.html'
 
 
-class NewsDelete(DeleteView):
+class NewsDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news_models.delete_post',)
     model = Post
     template_name = 'news_delete.html'
     success_url = reverse_lazy('news_list')
 
 
-class ArticlesCreate(CreateView):
+class ArticlesCreate(PermissionRequiredMixin, CreateView):
+    permission_required = ('news_models.add_post',)
     form_class = ArticlesForm
     model = Post
     template_name = 'articles_edit.html'
@@ -66,13 +71,15 @@ class ArticlesCreate(CreateView):
         return super().form_valid(form)
 
 
-class ArticlesUpdate(UpdateView):
+class ArticlesUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = ('news_models.change_post',)
     form_class = NewsForm
     model = Post
     template_name = 'articles_edit.html'
 
 
-class ArticlesDelete(DeleteView):
+class ArticlesDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = ('news_models.delete_post',)
     model = Post
     template_name = 'articles_delete.html'
     success_url = reverse_lazy('news_list')
