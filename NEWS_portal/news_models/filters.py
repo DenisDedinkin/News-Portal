@@ -11,6 +11,6 @@ class PostFilter(FilterSet):
         fields = {  # В fields мы описываем по каким полям модели будет производиться фильтрация.
             'title': ['icontains'],
             'post_type': ['exact'],
-            'in_time': ['gt'],
+            'time_in': ['gt'],
 
         }

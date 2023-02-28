@@ -26,7 +26,8 @@ class Author(models.Model):
 class Category(models.Model):
     category_name = models.CharField(max_length=100, choices=CATEGORY, default='news', unique=True)
 
-
+    def __str__(self):
+        return f'{self.category_name}'
 class Post(models.Model):
     author = models.ForeignKey('Author', on_delete=models.CASCADE)
     post_type = models.CharField(max_length=1, choices=TYPE_OF_POST, default=news)
