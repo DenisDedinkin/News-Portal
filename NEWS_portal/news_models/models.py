@@ -28,6 +28,8 @@ class Category(models.Model):
 
     def __str__(self):
         return f'{self.category_name}'
+
+
 class Post(models.Model):
     author = models.ForeignKey('Author', on_delete=models.CASCADE)
     post_type = models.CharField(max_length=1, choices=TYPE_OF_POST, default=news)
@@ -74,10 +76,3 @@ class Comment(models.Model):
     def dislike(self):
         self.comment_rating = self.comment_rating - 1
         self.save()
-
-# python manage.py makemigrations
-# python manage.py migrate
-# python manage.py runserver
-# python manage.py shell
-# venv\scripts\activate
-# from news_models.models import *
