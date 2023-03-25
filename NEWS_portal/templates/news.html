@@ -30,7 +30,14 @@ News
         </p>
         <input type="submit" value="submit" />
     </form>
-
+    <h1>Все товары</h1>
+    {# Добавляем форму, которая объединяет набор полей, которые будут отправляться в запросе #}
+   <form action="" method="get">
+       {# Переменная, которую мы передали через контекст, может сгенерировать нам форму с полями #}
+       {{ filterset.form.as_p }}
+       {# Добавим кнопку отправки данных формы #}
+       <input type="submit" value="Найти" />
+   </form>
 
    <hr>
    {% if news %}
@@ -48,6 +55,11 @@ News
                <td>{{ post.time_in|date:'d M Y H m' }}</td>
                <td>{{ post.text|truncatechars:20|censor }}</td>
                <td>{{ post.rating }}</td>
+               <td>
+                   <button>
+                       <a href="{{ post.get_absolute_url }}">Читать</a>
+                   </button>
+               </td>
            </tr>
            {% endfor %}
        </table>

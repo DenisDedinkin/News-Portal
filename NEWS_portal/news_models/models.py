@@ -25,7 +25,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     category_name = models.CharField(max_length=100, choices=CATEGORY, default='news', unique=True)
-    subscribers = models.ManyToManyField(User, through='Subscribers')
+    subscribers = models.ManyToManyField(User, through='SubscribersCategory')
 
     def __str__(self):
         return f'{self.category_name}'
@@ -55,7 +55,7 @@ class Post(models.Model):
         return f'{self.title}: {self.text[:124] + "..."}'
 
     def get_absolute_url(self):
-        return reverse('post_detail', args=[str(self.id)])
+        return f'/news/{self.pk}'
 
 
 class PostCategory(models.Model):
@@ -79,6 +79,6 @@ class Comment(models.Model):
         self.save()
 
 
-class Subscribers(models.Model):
+class SubscribersCategory(models.Model):
     subscribers = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
